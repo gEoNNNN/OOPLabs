@@ -15,17 +15,23 @@ class ProgramFiles(AllFiles):
         return line_count
     
     def number_of_clases(self,file_path):
-        with open(file_path, 'r') as file:
-            content = file.read()
-            class_pattern = re.compile(r'class\s+\w+\s*[{(]')
-            classes = class_pattern.findall(content)
-            class_count = len(classes)
-        return class_count
+        with open(file_path, 'r') as f:
+            content = f.read()
+        if file_path.endswith('.py'):
+            return content.count('class ')
+        elif file_path.endswith('.java'):
+            return sum(content.count(keyword) for keyword in [' class ', ' interface ', ' enum ', ' @interface '])
+        else:
+            return 0
         
     def number_of_methodes(self,file_path):
-        with open(file_path, 'r') as file:
-            content = file.read()
-            method_pattern = re.compile(r'def\s+\w+\s*\([^)]*\)\s*[{(]')
-            methods = method_pattern.findall(content)
-            method_count = len(methods)
-        return method_count     
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+        if file_path.endswith('.py'):
+            return sum(1 for line in lines if line.strip().startswith('def '))
+
+        elif file_path.endswith('.java'):
+            return sum(1 for line in lines if '(' in line and ')' in line and '{' in line)
+
+        else:
+            return 0   
