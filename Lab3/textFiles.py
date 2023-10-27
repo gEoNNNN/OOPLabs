@@ -8,10 +8,8 @@ class TextFiles(AllFiles):
         self.characterCount = characterCount
 
     def number_of_lines(self,file_path):
-        with open(file_path, "r") as file:
-            lines = file.readlines()
-            line_count = len(lines)
-        return line_count
+        with open(file_path, 'r') as f:
+            return sum(1 for line in f)
     
     def number_of_words(self,file_path):
         with open(file_path, "r") as file:

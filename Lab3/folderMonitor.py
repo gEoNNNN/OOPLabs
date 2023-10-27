@@ -12,7 +12,6 @@ class FolderMonitor:
         self.snapshot_time = time.time()
         self.file_info = []
 
-
     def commit(self):
         self.snapshot_time = time.time()
         snapshotTime = datetime.fromtimestamp(self.snapshot_time)
@@ -60,7 +59,7 @@ class FolderMonitor:
                     f"Line Count: {programFilesObject.lineCount}\n"
                     f"Class Count: {programFilesObject.classCount}\n"
                     f"Method Count: {programFilesObject.methodCount}")
-                    
+
     def scan(self):
         for file in os.listdir(self.folder_path):
             file_path = os.path.join(self.folder_path, file)
@@ -72,25 +71,35 @@ class FolderMonitor:
     
     def snapshotTime(self):
         self.snapshot_time = time.time()
-        return self.snapshot_time
-    
-    def status(self,past):
+        snapshotTime = datetime.fromtimestamp(self.snapshot_time)
+        return snapshotTime
+
+    def status(self, past):
+        self.file_info.clear()  # Clear the list before populating it again
+
         for file in os.listdir(self.folder_path):
             file_path = os.path.join(self.folder_path, file)
             if os.path.isfile(file_path):
                 updated = datetime.fromtimestamp(os.path.getmtime(file_path))
                 file_data = {'file_name': file, 'updated_date': updated}
                 self.file_info.append(file_data)
-        for presentElements in self.file_info:
-            for pastElements in past:
-                if presentElements.file_name == pastElements.file_name and presentElements.datetime == pastElements.datetime:
-                    print(presentElements.file_nam," - ","No Changes")
-                if presentElements.file_name == pastElements.file_name and presentElements.datetime != pastElements.datetime:
-                    print(presentElements.file_nam," - ","Changed")
-                if presentElements.file_name != pastElements.file_name and presentElements.datetime == pastElements.datetime:
-                    print(presentElements.file_nam," - ","New File")
-        for pastElements in past:
-            for presentElements in self.file_info:
-                if presentElements.file_name != pastElements.file_name and presentElements.datetime == pastElements.datetime:
-                    print(presentElements.file_nam," - ","Deleted")
-    
+
+        processed_files = set()
+
+        for presentElement in self.file_info:
+            found = False
+            for pastElement in past:
+                if presentElement['file_name'] == pastElement['file_name']:
+                    found = True
+                    processed_files.add(pastElement['file_name'])
+                    if presentElement['updated_date'] != pastElement['updated_date']:
+                        print(presentElement['file_name'], " - ", "Changed")
+                    else:
+                        print(presentElement['file_name'], " - ", "No Changes")
+                    break
+            if not found:
+                print(presentElement['file_name'], " - ", "New File")
+
+        for pastElement in past:
+            if pastElement['file_name'] not in processed_files:
+                print(pastElement['file_name'], " - ", "Deleted")
