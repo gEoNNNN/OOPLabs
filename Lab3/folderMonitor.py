@@ -11,3 +11,9 @@ class FolderMonitor:
         self.folder_path = folder_path
         self.snapshot_time = time.time()
         self.file_info = []
+
+
+    def commit(self):
+        self.snapshot_time = time.time()
+        snapshotTime = datetime.fromtimestamp(self.snapshot_time)
+        print("Snapshot time updated!", snapshotTime)
