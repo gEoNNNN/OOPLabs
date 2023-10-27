@@ -74,19 +74,22 @@ class FolderMonitor:
         snapshotTime = datetime.fromtimestamp(self.snapshot_time)
         return snapshotTime
 
-    def status(self, past):
-        self.file_info.clear()  # Clear the list before populating it again
+    def scan(self):
+            file_info_temp = []
+            for file in os.listdir(self.folder_path):
+                file_path = os.path.join(self.folder_path, file)
+                if os.path.isfile(file_path):
+                    updated = datetime.fromtimestamp(os.path.getmtime(file_path))
+                    file_data = {'file_name': file, 'updated_date': updated}
+                    file_info_temp.append(file_data)
+            return file_info_temp
+    
+    def snapshotTime(self):
+        return datetime.fromtimestamp(self.snapshot_time)
 
-        for file in os.listdir(self.folder_path):
-            file_path = os.path.join(self.folder_path, file)
-            if os.path.isfile(file_path):
-                updated = datetime.fromtimestamp(os.path.getmtime(file_path))
-                file_data = {'file_name': file, 'updated_date': updated}
-                self.file_info.append(file_data)
-
+    def status(self, past,current):
         processed_files = set()
-
-        for presentElement in self.file_info:
+        for presentElement in current:
             found = False
             for pastElement in past:
                 if presentElement['file_name'] == pastElement['file_name']:
