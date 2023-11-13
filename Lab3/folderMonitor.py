@@ -26,17 +26,7 @@ class FolderMonitor:
                 updated = datetime.fromtimestamp(os.path.getmtime(file_path))
                 if ".txt" in name:
                     textFiles = TextFiles(None, None, None, None, None, None, None)
-                    lineCount = textFiles.number_of_lines(file_path)
-                    wordCount = textFiles.number_of_words(file_path)
-                    characterCount = textFiles.number_of_charaters(file_path)
-                    textFilesObject = TextFiles(file,extension,created,updated,lineCount,wordCount,characterCount)
-                    print(f"Name: {textFilesObject.name}\n"
-                            f"Extension: {textFilesObject.extenstion}\n"
-                            f"Created: {textFilesObject.created}\n"
-                            f"Updated: {textFilesObject.updated}\n"
-                            f"Line Count: {textFilesObject.lineCount}\n"
-                            f"Word Count: {textFilesObject.wordCount}\n"
-                            f"Character Count: {textFilesObject.characterCount}")
+                    textFiles.txtInfo(name)
                 if (".png" in name) or (".jpg" in name):
                     imageFiles = ImageFiles(None, None, None, None, None)
                     imageSize = imageFiles.get_size(file_path)
@@ -87,6 +77,13 @@ class FolderMonitor:
     def snapshotTime(self):
         return datetime.fromtimestamp(self.snapshot_time)
 
+    def display_options(self):
+        print("\nOptions:")
+        print("1. commit")
+        print("2. info <filename>")
+        print("3. status")
+        print("4. exit")
+    
     def status(self, past,current):
         processed_files = set()
         for presentElement in current:
@@ -97,7 +94,7 @@ class FolderMonitor:
                     processed_files.add(pastElement['file_name'])
                     if presentElement['updated_date'] != pastElement['updated_date']:
                         print(presentElement['file_name'], " - ", "Changed")
-                    else:
+                    elif presentElement['updated_date'] == pastElement['updated_date']:
                         print(presentElement['file_name'], " - ", "No Changes")
                     break
             if not found:
@@ -106,3 +103,24 @@ class FolderMonitor:
         for pastElement in past:
             if pastElement['file_name'] not in processed_files:
                 print(pastElement['file_name'], " - ", "Deleted")
+
+    def Schedule(self,past,current):
+            processed_files = set()
+            for presentElement in current:
+                found = False
+                for pastElement in past:
+                    if presentElement['file_name'] == pastElement['file_name']:
+                        found = True
+                        processed_files.add(pastElement['file_name'])
+                        if presentElement['updated_date'] != pastElement['updated_date']:
+                            print("\n" + presentElement['file_name'], " - ", "Changes")
+                        break
+                if not found:
+                    print("\n" + presentElement['file_name'], " - ", "New File")
+
+            for pastElement in past:
+                if pastElement['file_name'] not in processed_files:
+                    print("\n" + pastElement['file_name'], " - ", "Deleted")
+
+
+            

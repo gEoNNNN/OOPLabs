@@ -23,3 +23,16 @@ class TextFiles(AllFiles):
             content = file.read()
             character_count = len(content)
         return character_count
+    
+    def txtInfo(self,file_path):
+        lineCount = self.number_of_lines(file_path)
+        wordCount = self.number_of_words(file_path)
+        characterCount = self.number_of_charaters(file_path)
+        textFilesObject = TextFiles(self.name,self.extension,self.created,self.updated,self.lineCount,self.wordCount,self.characterCount)
+        print(f"Name: {textFilesObject.name}\n"
+                f"Extension: {textFilesObject.extenstion}\n"
+                f"Created: {textFilesObject.created}\n"
+                f"Updated: {textFilesObject.updated}\n"
+                f"Line Count: {textFilesObject.lineCount}\n"
+                f"Word Count: {textFilesObject.wordCount}\n"
+                f"Character Count: {textFilesObject.characterCount}")
