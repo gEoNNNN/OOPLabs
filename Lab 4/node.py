@@ -26,6 +26,14 @@ class LinkedListStack(StackInterface):
         if self.is_empty():
             raise IndexError("peek from empty stack")
         return self.head.value
+    
+    def size(self):
+        current = self.head
+        count = 0
+        while current:
+            count += 1
+            current = current.next
+        return count
 
     def is_empty(self):
         return self.head is None

@@ -14,3 +14,6 @@ class StackInterface:
     def is_empty(self):
         """Check if the stack is empty."""
         raise NotImplementedError
+
+    def size(self):
+        return len(self.stack)
