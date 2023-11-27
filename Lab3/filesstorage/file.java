@@ -22,4 +22,9 @@ public class SimpleClass {
         SimpleClass obj = new SimpleClass("Hello, World!");
         System.out.println(obj.getMessage());
     }
+
+    public static void main(String[] args) {
+        SimpleClass obj = new SimpleClass("Hello, World!");
+        System.out.println(obj.getMessage());
+    }
 }
